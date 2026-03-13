@@ -4,11 +4,21 @@ import '../datasources/product_remote_datasource.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
   final ProductRemoteDataSource remoteDataSource;
+  List<Product>? _cachedProducts;
 
   ProductRepositoryImpl({required this.remoteDataSource});
 
   @override
   Future<List<Product>> getProducts() async {
-    return await remoteDataSource.fetchProducts();
+    try {
+      final products = await remoteDataSource.fetchProducts();
+      _cachedProducts = products;
+      return products;
+    } catch (e) {
+      if (_cachedProducts != null && _cachedProducts!.isNotEmpty) {
+        return _cachedProducts!;
+      }
+      rethrow;
+    }
   }
 }
