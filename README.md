@@ -1,16 +1,17 @@
-# mobile_arquitetura_02
+# Questionario
 
-A new Flutter project.
+1. Em qual camada foi implementado o mecanismo de cache? Explique por que essa decisão é adequada dentro da arquitetura proposta.
 
-## Getting Started
+Repository, dentro do Data layer. Abstrai a origem dos dados das camadas superiores.
 
-This project is a starting point for a Flutter application.
+2. Por que o ViewModel não deve realizar chamadas HTTP diretamente?
 
-A few resources to get you started if this is your first Flutter project:
+lógica de apresentação e lógica de aquisição de dados devem ser separados. O ViewModel apenas prepara os dados para a interface do usuário.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+3. O que poderia acontecer se a interface acessasse diretamente o DataSource?
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A inteface fica acoplada a uma fonte de dados específica.
+
+4. Como essa arquitetura facilitaria a substituição da API por um banco de dados local?
+
+Nada da interface e viewmodel precisaria ser alterado, apenas datasource e repository.
