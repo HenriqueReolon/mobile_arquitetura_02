@@ -5,6 +5,8 @@ class ProductModel extends Product {
     required super.id,
     required super.title,
     required super.price,
+    required super.description,
+    required super.category,
     required super.image,
   });
 
@@ -13,6 +15,8 @@ class ProductModel extends Product {
       id: json['id'],
       title: json['title'],
       price: json['price'].toDouble(),
+      description: json['description'],
+      category: json['category'],
       image: json['image'],
     );
   }

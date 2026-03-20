@@ -23,4 +23,20 @@ class ProductRemoteDataSource {
       throw ServerException('Falha de comunicação com a API');
     }
   }
+
+  Future<ProductModel> fetchProduct(int id) async {
+    try {
+      final response = await apiClient.client.get(Uri.parse('https://fakestoreapi.com/products/$id'));
+      
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonMap = json.decode(response.body);
+        return ProductModel.fromJson(jsonMap);
+      } else {
+        throw ServerException('Erro ao carregar produto. Código: ${response.statusCode}');
+      }
+    } catch (e) {
+      if (e is ServerException) rethrow;
+      throw ServerException('Falha de comunicação com a API');
+    }
+  }
 }

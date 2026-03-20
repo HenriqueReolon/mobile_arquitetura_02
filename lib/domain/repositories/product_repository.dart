@@ -2,4 +2,5 @@ import '../entities/product.dart';
 
 abstract class ProductRepository {
   Future<List<Product>> getProducts();
+  Future<Product> getProduct(int id);
 }

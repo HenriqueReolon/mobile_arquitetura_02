@@ -21,4 +21,15 @@ class ProductRepositoryImpl implements ProductRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Product> getProduct(int id) async {
+    if (_cachedProducts != null) {
+      try {
+        return _cachedProducts!.firstWhere((p) => p.id == id);
+      } catch (_) {
+      }
+    }
+    return await remoteDataSource.fetchProduct(id);
+  }
 }

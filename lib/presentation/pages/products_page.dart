@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/product_repository.dart';
+import 'product_details_page.dart';
 
 sealed class ProductsState {}
 
@@ -87,6 +88,17 @@ class _ProductsPageState extends State<ProductsPage> {
                     leading: Image.network(product.image, width: 50, height: 50),
                     title: Text(product.title),
                     subtitle: Text('\$${product.price}'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailsPage(
+                            repository: widget.repository,
+                            productId: product.id,
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
