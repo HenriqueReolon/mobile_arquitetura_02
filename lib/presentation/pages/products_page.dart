@@ -56,7 +56,15 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Produtos')),
+      appBar: AppBar(
+        title: const Text('Produtos'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: switch (_state) {
         ProductsLoading() => const Center(child: CircularProgressIndicator()),
         ProductsError(:final message) => Center(

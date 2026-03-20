@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'core/api_client.dart';
 import 'data/datasources/product_remote_datasource.dart';
 import 'data/repositories/product_repository_impl.dart';
-import 'presentation/pages/products_page.dart';
+import 'presentation/pages/home_page.dart';
 
 void main() {
   final apiClient = ApiClient();
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Atividade 4',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: ProductsPage(repository: repository),
+      home: HomePage(repository: repository),
     );
   }
 }
