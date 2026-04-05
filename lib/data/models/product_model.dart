@@ -31,4 +31,15 @@ class ProductModel extends Product {
       image: imageUrl,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'price': price,
+      'description': description,
+      'categoryId': 1,
+      'images': [image],
+    };
+  }
 }

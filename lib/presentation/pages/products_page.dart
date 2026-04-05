@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/product_repository.dart';
 import 'product_details_page.dart';
+import 'product_form_page.dart';
 
 sealed class ProductsState {}
 
@@ -54,6 +55,43 @@ class _ProductsPageState extends State<ProductsPage> {
     }
   }
 
+  Future<void> _deleteProduct(Product product) async {
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Excluir Produto'),
+        content: Text('Deseja realmente excluir "${product.title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Excluir', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmar != true) return;
+
+    try {
+      setState(() {
+        _state = ProductsLoading();
+      });
+      await widget.repository.deleteProduct(product.id);
+      _loadProducts(); // Recarrega a lista
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao excluir: $e')),
+        );
+        _loadProducts(); // Retorna ao estado anterior recarregando
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,24 +123,75 @@ class _ProductsPageState extends State<ProductsPage> {
                 itemBuilder: (context, index) {
                   final product = products[index];
                   return ListTile(
-                    leading: Image.network(product.image, width: 50, height: 50),
-                    title: Text(product.title),
-                    subtitle: Text('\$${product.price}'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductDetailsPage(
-                            repository: widget.repository,
-                            productId: product.id,
+                      leading: Image.network(
+                        product.image,
+                        width: 50,
+                        height: 50,
+                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                      ),
+                      title: Text(
+                        product.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text('\$${product.price}'),
+                      trailing: Wrap(
+                        spacing: -8,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductFormPage(
+                                    repository: widget.repository,
+                                    product: product,
+                                  ),
+                                ),
+                              );
+                              if (result == true) {
+                                _loadProducts(); // Recarrega
+                              }
+                            },
                           ),
-                        ),
-                      );
-                    },
-                  );
-                },
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => _deleteProduct(product),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailsPage(
+                              repository: widget.repository,
+                              productId: product.id,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+        },
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductFormPage(
+                  repository: widget.repository,
+                ),
               ),
-      },
-    );
+            );
+            if (result == true) {
+              _loadProducts(); // Recarrega
+            }
+          },
+          child: const Icon(Icons.add),
+        ),
+      );
+    }
   }
-}
