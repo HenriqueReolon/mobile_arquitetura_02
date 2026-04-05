@@ -10,7 +10,7 @@ class ProductRemoteDataSource {
 
   Future<List<ProductModel>> fetchProducts() async {
     try {
-      final response = await apiClient.client.get(Uri.parse('https://fakestoreapi.com/products'));
+      final response = await apiClient.client.get(Uri.parse('https://api.escuelajs.co/api/v1/products'));
       
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
@@ -26,7 +26,7 @@ class ProductRemoteDataSource {
 
   Future<ProductModel> fetchProduct(int id) async {
     try {
-      final response = await apiClient.client.get(Uri.parse('https://fakestoreapi.com/products/$id'));
+      final response = await apiClient.client.get(Uri.parse('https://api.escuelajs.co/api/v1/products/$id'));
       
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonMap = json.decode(response.body);
